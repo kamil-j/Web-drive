@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment='uploadPreloader'>
+    <div id="preloader" class="row center" th:hidden="true">
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                <div class="circle"></div>
+            </div><div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
+            </div>
+        </div>
+        <div>
+            <span class="indigo-text center" th:text="#{layout.upload.preloader.wait}">File is uploading. Please wait...</span>
+        </div>
+    </div>
+</div>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div id="deleteFileModal" class="modal" th:fragment="deleteFileModal">
+    <div class="modal-content">
+        <h4 th:text="#{file.delete.confirmation}">Are you sure that you want to delete this file?</h4>
+    </div>
+
+    <div class="modal-footer">
+        <form id="delete-file-form" class="inline-form" th:action="@{/file}" th:method="DELETE">
+
+            <button id="btn-delete" type="submit" th:text="#{file.delete.confirmation.btn}" class="modal-action modal-close waves-effect waves-green btn-flat">Confirm</button>
+
+            <input id="cloudFileNameDelete" name="cloudFileName" th:hidden="true"/>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        </form>
+    </div>
+
+    <script th:inline="javascript">
+        function openDeleteModal(cloudFileName) {
+            $('#cloudFileNameDelete').val(cloudFileName);
+            $('#deleteFileModal').modal('open');
+        }
+    </script>
+</div>
+</html>

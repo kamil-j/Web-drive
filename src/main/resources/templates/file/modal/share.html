@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div id="sharedFileModal" style="height:400px;" class="modal" th:fragment="sharedFileModal">
+    <div class="modal-content">
+        <div class="row">
+            <h4 class="indigo-text center" th:text="#{share.file.modal.header}">Sharing file</h4>
+        </div>
+
+        <div id="searchUser" class="row">
+            <form id="user-search-form" class="col m8 offset-m2 s12">
+                <div class="input-field col m8 s12">
+                    <i class="material-icons prefix">account_circle</i>
+                    <input id="userEmail" type="text"/>
+                    <label for="userEmail" th:text="#{share.file.modal.userEmail}">User email</label>
+                </div>
+
+                <button id="btn-search" class="col m4 s6 offset-s3 center-align btn indigo waves-effect waves-light"
+                        th:utext="#{share.file.modal.button.find}" type="submit" name="action">
+                    Find <i class="material-icons right">search</i>
+                </button>
+            </form>
+        </div>
+
+        <div id="shareRequest" class="row" th:hidden="true">
+            <a class="col m1 offset-m1 s1" href="javascript:backToUserSearch()">
+                <i class="indigo-text medium material-icons">arrow_back</i>
+            </a>
+
+            <form id="shareForm" th:action="@{/share}" class="col m6 s9 offset-m1 offset-s2" method="POST" >
+                <div class="input-field">
+                    <i class="material-icons prefix">account_circle</i>
+                    <label for="email">Email</label>
+                    <input id="email" name="email" type="text" th:readonly="true"/>
+                </div>
+
+                <div class="input-field">
+                    <select id="shareTime" name="shareTime">
+                        <option th:selected="true" th:disabled="true" th:text="#{share.file.modal.option.select}">Choose</option>
+                        <option value="NO_LIMIT" th:text="#{share.file.modal.option.noLimit}">Without time limit</option>
+                        <option value="HOUR1" th:text="#{share.file.modal.option.hour1}">1 hour</option>
+                        <option value="HOUR3" th:text="#{share.file.modal.option.hour3}">3 hour</option>
+                        <option value="HOUR12" th:text="#{share.file.modal.option.hour12}">12 hour</option>
+                        <option value="HOUR24" th:text="#{share.file.modal.option.hour24}">24 hour</option>
+                        <option value="WEEK" th:text="#{share.file.modal.option.week}">Week</option>
+                        <option value="MONTH" th:text="#{share.file.modal.option.month}">Month</option>
+                        <option value="YEAR" th:text="#{share.file.modal.option.year}">Year</option>
+                    </select>
+                    <label for="shareTime" th:text="#{share.file.modal.option.label}">Share time</label>
+                </div>
+
+                <input id="cloudFileNameShare" name="cloudFileNameShare" th:hidden="true"/>
+
+                <button id="btn-share" class="col s12 center-align btn indigo waves-effect waves-light"
+                        th:text="#{share.file.modal.button.share}" type="submit" name="action">Share</button>
+
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            </form>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        function openShareModal(cloudFileName) {
+            $('#shareRequest').hide();
+            $('#searchUser').show();
+            $('#cloudFileNameShare').val(cloudFileName);
+            $("#btn-search").prop("disabled", false);
+            $('#sharedFileModal').modal('open');
+        }
+
+        $('#btn-share').attr('disabled', true);
+        $('#shareTime').change(function () {
+            if ($('#shareTime').val() !== '') {
+                $('#btn-share').attr('disabled', false);
+            } else {
+                $('#btn-share').attr('disabled', true);
+            }
+        });
+    </script>
+</div>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment='paginationBar'>
+    <div class="row" th:if="${page != null}">
+        <ul class="pagination center">
+            <li th:class="${page.hasPreviousPage}? 'waves-effect' : 'disabled'">
+                <a th:if='${not page.hasPreviousPage}' href='#'><i class="material-icons">chevron_left</i></a>
+                <a th:if='${page.hasPreviousPage}' th:href='@{${page.url}(page=${page.number-2},size=${page.size})}'><i class="material-icons">chevron_left</i></a>
+            </li>
+
+            <li th:each='item : ${page.items}' th:class="${item.current}? 'active' : 'waves-effect'">
+                <a th:if='${item.current}' href='#' th:text='${item.number}'>1</a>
+                <a th:if='${not item.current}' th:href='@{${page.url}(page=${item.number-1},size=${page.size})}'><th:block th:text='${item.number}'>1</th:block></a>
+            </li>
+
+            <li th:class="${page.hasNextPage}? 'waves-effect' : 'disabled'">
+                <a th:if='${not page.hasNextPage}' href='#'><i class="material-icons">chevron_right</i></a>
+                <a th:if='${page.hasNextPage}' th:href='@{${page.url}(page=${page.number},size=${page.size})}'><i class="material-icons">chevron_right</i></a>
+            </li>
+        </ul>
+    </div>
+</div>
+</html>

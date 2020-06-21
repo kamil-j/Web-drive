@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default">
+<head>
+    <title th:text="#{download.page.title}">WebDrive Download</title>
+</head>
+<body>
+<div class="row" layout:fragment="content">
+    <div class="container">
+        <div class="row">
+            <h4 class="indigo-text center" th:text="#{download.header}">Download file</h4>
+        </div>
+
+        <div th:if="${file != null}" class="row">
+            <ul class="col s10 offset-s1 collapsible" data-collapsible="accordion">
+                <li>
+                    <div class="row collapsible-header active">
+                        <div class="right">
+                            <a th:href="@{'/download/{cloudFileName}'(cloudFileName=${file.getCloudName()})}" class="btn-floating waves-effect waves-light green darken-3 tooltipped" data-position="top" th:attr="data-tooltip=#{download.page.tooltip.download}">
+                                <i class="material-icons">cloud_download</i>
+                            </a>
+                        </div>
+                        <div class="col m6 s12">
+                            <i class="material-icons circle">description</i>
+                            <span class="title" th:text="${file.getName()}">File</span>
+                        </div>
+                    </div>
+                    <div class="row collapsible-body">
+                        <b><span class="indigo-text text-darken-2" th:text="#{download.file.owner.prefix} + ' '"></span></b>
+                        <span th:text="${file.getUser().getEmail()}"></span><br/>
+
+                        <b><span class="indigo-text text-darken-2" th:text="#{download.file.expiration.date.prefix} + ' '"></span></b>
+                        <span th:if="${#temporals.createNow().plusYears(2000).isAfter(file.getLinkExpiredDate())}"
+                              th:text="${#temporals.format(file.getLinkExpiredDate(), 'HH:mm dd-MM-yyyy')}"></span>
+                        <span th:if="${#temporals.createNow().plusYears(2000).isBefore(file.getLinkExpiredDate())}"
+                              th:text="#{download.file.expiration.date.unlimited}"></span>
+                        <br/>
+
+                        <b><span class="indigo-text text-darken-2" th:text="#{download.file.description.prefix} + ' '"></span></b>
+                        <span th:text="${file.getDescription()} + ' '"></span><br/>
+
+                        <b><span class="indigo-text text-darken-2" th:text="#{download.file.size.prefix} + ' '"></span></b>
+                        <span th:text="${#numbers.formatDecimal(file.getSize() / 1048576.0, 1, 'COMMA', 3, 'POINT')} + ' '"></span>
+                        <span th:text="#{download.file.size.suffix} + ' '"></span><br/>
+
+                        <b><span class="indigo-text text-darken-2"  th:text="#{download.file.contentType.prefix} + ' '"></span></b>
+                        <span th:text="${file.getContentType()} + ' '"></span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" layout:fragment="script">
+    $(document).ready(function(){
+        $('.row.collapsible-header a').on('click', function(e) {
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+        });
+    });
+</script>
+</body>
+</html>

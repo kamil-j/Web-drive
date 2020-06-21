@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head lang="pl">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <title>WebDrive Error</title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="/webjars/materializecss/0.99.0/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link th:href="@{/css/core.css}" href="../../static/css/core.css" rel="stylesheet" media="screen"/>
+</head>
+<body>
+<div class="row">
+    <h1 class="indigo-text center" th:text="#{error.header}">Oooooppppsss! The page cannot be found.</h1>
+
+    <p class="col s12 center" th:utext="#{error.message}">
+        Not to worry. You can either head back to <a href="/">our homepage</a>, or sit there and wait until we fix it (probably never).
+    </p>
+</div>
+
+<script src="/webjars/jquery/3.2.1/jquery.js"></script>
+<script src="/webjars/materializecss/0.99.0/js/materialize.js"></script>
+<script th:src="@{/js/core.js}" src="../../static/js/core.js"></script>
+</body>
+</html>

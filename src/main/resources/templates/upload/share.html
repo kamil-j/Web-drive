@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default">
+<head>
+    <title th:text="#{upload.share.page.title}">WebDrive Share file</title>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('select').material_select();
+        });
+    </script>
+</head>
+<body>
+<div class="section no-pad-bot" layout:fragment="content">
+    <div class="container">
+        <div class="col m6 s12">
+            <div class="row">
+                <h4 class="indigo-text center" th:text="#{upload.share.header}">Upload and share file</h4>
+            </div>
+
+            <div id="searchUser" class="row">
+                <form id="user-search-form" class="col m6 offset-m3 s12">
+                    <div class="input-field col s8">
+                        <i class="material-icons prefix">account_circle</i>
+                        <input id="userEmail" type="text" class="validate" />
+                        <label for="userEmail" th:text="#{upload.share.userEmail}">User email</label>
+                    </div>
+
+                    <button id="btn-search" class="col s4 center-align btn indigo waves-effect waves-light" th:utext="#{upload.share.button.find}" type="submit" name="action">Find
+                        <i class="material-icons right">search</i>
+                    </button>
+                </form>
+            </div>
+
+            <div th:replace="layout/uploadPreloader :: uploadPreloader"></div>
+
+            <div id="shareRequest" class="row" th:hidden="true">
+                <a class="col m1 offset-m1 s1" href="javascript:backToUserSearch()">
+                    <i class="medium material-icons">arrow_back</i>
+                </a>
+
+                <form id="uploadForm" class="col m6 offset-m1 s9 offset-s1" th:object="${form}" th:action="@{/upload/share}" enctype="multipart/form-data" method="POST">
+                    <div class="input-field">
+                        <i class="material-icons prefix">account_circle</i>
+                        <input id="email" th:field="*{email}" name="email" type="text" th:readonly="true"
+                               th:classappend="${#fields.hasErrors('email')} ? 'invalid '"/>
+                        <script th:each="errMsg : ${#fields.errors('email')}" th:inline="javascript">
+                            Materialize.toast([[${errMsg}]], 6000);
+                        </script>
+                    </div>
+
+                    <div class="file-field input-field">
+                        <div class="btn indigo">
+                            <span th:text="#{upload.share.label.button}">File</span>
+                            <input type="file" id="uploadedFile" th:field="*{file}" name="file" th:classappend="${#fields.hasErrors('file')} ? 'invalid '"/>
+                            <script th:each="errMsg : ${#fields.errors('file')}" th:inline="javascript">
+                                Materialize.toast([[${errMsg}]], 6000);
+                            </script>
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="input-field">
+                            <i class="material-icons prefix">mode_edit</i>
+                            <input id="description"  th:field="*{description}" th:classappend="${#fields.hasErrors('description')} ? 'invalid '" name="description" type="text" data-length="20" />
+                            <label for="description" th:text="#{upload.share.label.description}">Short description</label>
+                            <script th:each="errMsg : ${#fields.errors('description')}" th:inline="javascript">
+                                Materialize.toast([[${errMsg}]], 6000);
+                            </script>
+                        </div>
+                    </div>
+
+                    <div class="input-field">
+                        <select id="shareTime" th:field="*{shareTime}" th:classappend="${#fields.hasErrors('shareTime')} ? 'invalid '" name="shareTime">
+                            <option value="HOUR1" th:selected="true" th:text="#{upload.share.option.hour1}">1 hour</option>
+                            <option value="HOUR3" th:text="#{upload.share.option.hour3}">3 hour</option>
+                            <option value="HOUR12" th:text="#{upload.share.option.hour12}">12 hour</option>
+                            <option value="HOUR24" th:text="#{upload.share.option.hour24}">24 hour</option>
+                            <option value="WEEK" th:text="#{upload.share.option.week}">Week</option>
+                            <option value="MONTH" th:text="#{upload.share.option.month}">Month</option>
+                            <option value="YEAR" th:text="#{upload.share.option.year}">Year</option>
+                            <option value="NO_LIMIT" th:text="#{upload.share.option.noLimit}">Without time limit</option>
+                        </select>
+                        <label for="shareTime" th:text="#{upload.share.option.label}">Share time</label>
+                        <script th:each="errMsg : ${#fields.errors('shareTime')}" th:inline="javascript">
+                            Materialize.toast([[${errMsg}]], 6000);
+                        </script>
+                    </div>
+
+                    <div class="row center">
+                        <button class="btn indigo waves-effect waves-light" type="submit" name="action"
+                                th:utext="#{upload.share.form.submit}">Share <i class="small material-icons right">send</i>
+                        </button>
+                    </div>
+
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        $('#uploadedFile').bind('change', function() {
+            if(this.files[0].size > 104857600) {
+                Materialize.toast([[#{upload.file.exceeded.max}]], 4000)
+                $('#uploadedFile').val('');
+            }
+        });
+    </script>
+</div>
+
+<script type="text/javascript" layout:fragment="script">
+    $(document).ready(function(){
+        $(".nav-content ul li a").removeClass("active");
+        $("#sharingTab").addClass("active");
+
+        $('#uploadForm').submit(function(){
+            $('#preloader').show();
+            $('#searchUser').hide();
+            $('#shareRequest').hide();
+        });
+    });
+</script>
+</body>
+</html>

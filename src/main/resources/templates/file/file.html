@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default">
+<head>
+    <title th:text="#{file.page.title}">WebDrive Files</title>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('select').material_select();
+        });
+    </script>
+</head>
+<body>
+<div class="row" layout:fragment="content">
+    <div class="container">
+        <div class="row">
+            <h4 class="indigo-text center" th:text="#{file.header}">Your files</h4>
+        </div>
+
+        <div th:if="${files.isEmpty()}" class="row">
+            <h5 class="center grey-text darken-4" th:text="#{file.noFiles.header}">You do not have any files yet :(</h5>
+        </div>
+
+        <div class="row">
+            <ul class="col s10 offset-s1 collapsible" data-collapsible="accordion" th:each="file : ${files}">
+                <li>
+                    <div class="row collapsible-header">
+                        <div class="right">
+                            <a class="btn-floating waves-effect waves-light light-blue tooltipped" th:onclick="'javascript:openLinkModal(\'' + ${file.getCloudName()} + '\')'" data-position="top" th:attr="data-tooltip=#{file.tooltip.link}">
+                                <i class="material-icons">link</i>
+                            </a>
+
+                            <a class="btn-floating waves-effect waves-light amber darken-3 tooltipped" th:onclick="'javascript:openShareModal(\'' + ${file.getCloudName()} + '\')'" data-position="top" th:attr="data-tooltip=#{file.tooltip.share}">
+                                <i class="material-icons">publish</i>
+                            </a>
+
+                            <a class="btn-floating waves-effect waves-light green darken-3 tooltipped" th:href="@{'/file/{cloudFileName}'(cloudFileName=${file.getCloudName()})}" data-position="top" th:attr="data-tooltip=#{file.tooltip.download}">
+                                <i class="material-icons">cloud_download</i>
+                            </a>
+
+                            <a class="btn-floating waves-effect waves-light grey darken-3 tooltipped" th:onclick="'javascript:openDeleteModal(\'' + ${file.getCloudName()} + '\')'"  data-position="top" th:attr="data-tooltip=#{file.tooltip.delete}">
+                                <i class="material-icons">delete_forever</i>
+                            </a>
+                        </div>
+                        <div class="col m6 s12">
+                            <i class="material-icons circle">description</i>
+                            <span class="title" th:text="${file.getName()}">File</span>
+                        </div>
+                    </div>
+                    <div class="row collapsible-body">
+                        <b><span class="indigo-text text-darken-2 bold"  th:text="#{file.description.prefix} + ' '"></span></b>
+                        <span th:text="${file.getDescription()} + ' '"></span><br/>
+
+                        <b><span class="indigo-text text-darken-2" th:text="#{file.size.prefix} + ' '"></span></b>
+                        <span th:text="${#numbers.formatDecimal(file.getSize() / 1048576.0, 1, 'COMMA', 3, 'POINT')} + ' '"></span>
+                        <span th:text="#{file.size.suffix} + ' '"></span><br/>
+
+                        <b><span class="indigo-text text-darken-2"  th:text="#{file.contentType.prefix} + ' '"></span></b>
+                        <span th:text="${file.getContentType()} + ' '"></span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div th:replace="file/modal/link :: linkFileModal"></div>
+        <div th:replace="file/modal/share :: sharedFileModal"></div>
+        <div th:replace="file/modal/delete :: deleteFileModal"></div>
+        <div th:replace="layout/paginationBar :: paginationBar"></div>
+    </div>
+</div>
+
+<script type="text/javascript" layout:fragment="script">
+    $(document).ready(function(){
+        $(".nav-content ul li a").removeClass("active");
+        $("#filesTab").addClass("active");
+
+        $('.row.collapsible-header a').on('click', function(e) {
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+        });
+    });
+</script>
+</body>
+</html>

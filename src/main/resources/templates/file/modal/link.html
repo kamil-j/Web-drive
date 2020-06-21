@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div id="linkFileModal" class="modal modal-big" th:fragment="linkFileModal">
+    <div class="modal-content">
+        <div class="row">
+            <h4 class="indigo-text center" th:text="#{file.modal.link.header}">Get file download link</h4>
+        </div>
+
+        <div id="generateLink" class="row">
+            <form id="generate-link-form" class="col m8 offset-m2 s12">
+                <div class="input-field col m6 s10 offset-s1">
+                    <select id="linkTime" name="linkTime">
+                        <option th:selected="true" th:disabled="true" th:text="#{file.modal.link.option.select}">Choose</option>
+                        <option value="HOUR1" th:text="#{file.modal.link.option.hour1}">1 hour</option>
+                        <option value="HOUR3" th:text="#{file.modal.link.option.hour3}">3 hour</option>
+                        <option value="HOUR6" th:text="#{file.modal.link.option.hour6}">6 hour</option>
+                        <option value="HOUR12" th:text="#{file.modal.link.option.hour12}">12 hour</option>
+                        <option value="HOUR24" th:text="#{file.modal.link.option.hour24}">24 hour</option>
+                    </select>
+                    <label for="linkTime" th:text="#{file.modal.link.option.label}">Link availability time</label>
+                </div>
+
+                <input id="cloudFileNameLink" th:hidden="true"/>
+
+                <button id="btn-link" type="submit" class="col m5 offset-m1 s6 offset-s3 btn indigo waves-effect waves-light"
+                        th:utext="#{file.modal.link.button.getLink}">Get link <i class="small material-icons right">create</i>
+                </button>
+            </form>
+        </div>
+
+        <div id="linkBox" class="row col m8 offset-m2 s12" th:hidden="true">
+            <div class="row">
+                <div class="input-field col m12 s12">
+                    <label for="link">Link</label>
+                    <input class="col m9 s12 orange-text darken-4" id="link" name="link" type="text" th:disabled="true" />
+                    <button id="btn-copy" onclick="copyToClipboard('link');" class="col m2 offset-m1 s4 offset-s4 btn indigo waves-effect waves-light">
+                        <i class="material-icons">content_copy</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        function openLinkModal(cloudFileName) {
+            $('#linkBox').hide();
+            $("#btn-link").prop("disabled", false);
+            $('#generateLink').show();
+            $('#cloudFileNameLink').val(cloudFileName);
+            $('#linkFileModal').modal('open');
+        }
+
+        function copyToClipboard(elementId) {
+            var aux = document.createElement("input");
+            aux.setAttribute("value", document.getElementById(elementId).value);
+            document.body.appendChild(aux);
+
+            aux.select();
+            document.execCommand("copy");
+            document.body.removeChild(aux);
+
+            Materialize.toast([[#{file.modal.link.copy.message}]], 4000);
+        }
+    </script>
+</div>
+</html>

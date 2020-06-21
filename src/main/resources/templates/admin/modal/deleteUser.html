@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div id="deleteUserModal" class="modal" th:fragment="deleteUserModal">
+    <div class="modal-content">
+        <h4 th:text="#{admin.user.delete.confirmation}">Are you sure that you want to delete this user?</h4>
+    </div>
+
+    <div class="modal-footer">
+        <form id="delete-file-form" class="inline-form" th:action="@{/admin/user}" th:method="DELETE">
+
+            <button id="btn-delete" type="submit" th:text="#{admin.user.delete.confirmation.btn}" class="modal-action modal-close waves-effect waves-green btn-flat">Confirm</button>
+
+            <input id="userId" name="userId" th:value="${form.getId()}" th:hidden="true"/>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        </form>
+    </div>
+
+    <script th:inline="javascript">
+        function openDeleteModal(cloudFileName) {
+            $('#deleteUserModal').modal('open');
+        }
+    </script>
+</div>
+</html>

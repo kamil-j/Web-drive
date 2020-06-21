@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div id="cancelShareModal" class="modal" th:fragment="cancelShareModal">
+    <div class="modal-content">
+        <h4 th:text="#{share.file.delete.confirmation}">Are you sure that you want to delete this file?</h4>
+    </div>
+
+    <div class="modal-footer">
+        <form id="cancel-file-form" class="inline-form" th:action="@{/share}" th:method="DELETE">
+
+            <button id="btn-cancel" type="submit" th:text="#{share.file.delete.confirmation.btn}" class="modal-action modal-close waves-effect waves-green btn-flat">Confirm</button>
+
+            <input id="emailUserToCancel"  name="emailUserTo" th:hidden="true"/>
+            <input id="cloudFileNameCancel" name="cloudFileName" th:hidden="true"/>
+
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        </form>
+    </div>
+
+    <script th:inline="javascript">
+        function openCancelModal(cloudFileName, emailUserTo) {
+            $('#cloudFileNameCancel').val(cloudFileName);
+            $('#emailUserToCancel').val(emailUserTo);
+            $('#cancelShareModal').modal('open');
+        }
+    </script>
+</div>
+</html>

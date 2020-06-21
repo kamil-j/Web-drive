@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:fragment="header">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <meta th:name="_csrf" th:content="${_csrf.token}"/>
+    <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>Web drive</title>
+
+    <link th:href="@{/css/material-icons.css}" href="../../static/css/material-icons.css" rel="stylesheet" />
+    <link href="/webjars/materializecss/0.99.0/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link th:href="@{/css/core.css}" href="../../static/css/core.css" rel="stylesheet" media="screen"/>
+    <script type="text/javascript">
+        $(".dropdown-button").dropdown();
+
+        $(document).ready(function(){
+            $('.modal').modal();
+            $(".button-collapse").sideNav();
+        });
+    </script>
+    <script src="/webjars/jquery/3.2.1/jquery.js"></script>
+    <th:block layout:fragment="script"/>
+    <script src="/webjars/materializecss/0.99.0/js/materialize.js"></script>
+    <script th:src="@{/js/core.js}" src="../../static/js/core.js"></script>
+</head>
+<body>
+
+<ul id="lang-dropdown" class="dropdown-content">
+    <li><a th:href="@{${currentUrl}(lang=en)}">English</a></li>
+    <li><a th:href="@{${currentUrl}(lang=pl)}">Polski</a></li>
+</ul>
+<ul id="settings-dropdown" class="dropdown-content">
+    <li>
+        <a th:href="@{/user}" th:text="#{nav.myaccount}">My account</a>
+    </li>
+    <li th:if="${currentUser != null and currentUser.getRole().name() == 'ADMIN'}">
+        <a th:href="@{/admin}" th:text="#{nav.admin}">Admin panel</a>
+    </li>
+    <li>
+        <form id="logout_form" th:action="@{/logout}" method="post"></form>
+        <a href="javascript:{}" onclick="document.getElementById('logout_form').submit();" th:text="#{nav.signout}">Sign Out</a>
+    </li>
+</ul>
+<nav class="nav-extended">
+    <div class="nav-wrapper indigo">
+        <a href="/" class="brand-logo center">Web Drive</a>
+        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+            <li>
+                <a class="dropdown-button" href="#" data-activates="lang-dropdown">
+                    <i class="material-icons right">language</i><span th:text="#{nav.lang}">Language</span>
+                </a>
+            </li>
+            <li sec:authorize="isAuthenticated()">
+                <a class="dropdown-button" data-activates="settings-dropdown" href="#">
+                    <i class="material-icons right">menu</i>
+                    <span th:text="#{nav.menu}">Menu</span>
+                </a>
+            </li>
+        </ul>
+        <ul id="mobile-demo" class="side-nav">
+            <li><a class="subheader" th:text="#{nav.lang}">Language</a></li>
+            <li><div class="divider"></div></li>
+            <li><a th:href="@{${currentUrl}(lang=en)}">English</a></li>
+            <li><a th:href="@{${currentUrl}(lang=pl)}">Polski</a></li>
+
+            <li><div class="divider"></div></li>
+            <li><a class="subheader" th:text="#{nav.menu}">Menu</a></li>
+            <li>
+                <a th:href="@{/user}" th:text="#{nav.myaccount}">Account</a>
+            </li>
+            <li th:if="${currentUser != null and currentUser.getRole().name() == 'ADMIN'}">
+                <a th:href="@{/admin}" th:text="#{nav.admin}">Admin panel</a>
+            </li>
+            <li>
+                <form id="logout_formMobile" th:action="@{/logout}" method="post"></form>
+                <a href="javascript:{}" onclick="document.getElementById('logout_formMobile').submit();" th:text="#{nav.signout}">Sign Out</a>
+            </li>
+        </ul>
+    </div>
+    <div class="divider light-blue"></div>
+    <div id="navbar" sec:authorize="isAuthenticated()" class="nav-content center indigo">
+        <ul class="tabs tabs-transparent">
+            <li class="tab"><a id="filesTab" class="active" target="_self" th:href="@{/file}" th:text="#{nav.my.files}">My files</a></li>
+            <li class="tab"><a id="sharedTab" target="_self" th:href="@{/shared}" th:text="#{nav.shared}">Shared files</a></li>
+            <li class="tab"><a id="sharingTab" target="_self" th:href="@{/share}" th:text="#{nav.sharing}">Sharing files</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="divider"></div>
+
+<section layout:fragment="content">
+    <p>Main web content</p>
+</section>
+
+<div sec:authorize="isAuthenticated()" class="fixed-action-btn">
+    <a class="btn-floating btn-large red">
+        <i class="large material-icons">create</i>
+    </a>
+    <ul>
+        <li>
+            <a class="btn-floating amber darken-3" th:href="@{/upload/share}"><i class="material-icons">publish</i></a>
+        </li>
+        <li>
+            <a class="btn-floating indigo" th:href="@{/upload}"><i class="material-icons">cloud_upload</i></a>
+        </li>
+    </ul>
+</div>
+
+<script th:if="${message != null}" th:inline="javascript">
+    Materialize.toast([[${message}]], 4000);
+</script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".button-collapse").sideNav();
+    });
+</script>
+</body>
+</html>

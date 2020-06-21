@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default">
+<head>
+    <title th:text="#{shared.file.page.title}">WebDrive Shared files</title>
+</head>
+<body>
+<div class="row" layout:fragment="content">
+    <div class="container">
+        <div class="row">
+            <h4 class="indigo-text center" th:text="#{shared.file.header}">Shared files</h4>
+        </div>
+
+        <div th:if="${sharedToUserFiles.isEmpty()}" class="row">
+            <h5 class="center grey-text darken-4" th:text="#{shared.file.noFiles.header}">You do not have any shared files yet :(</h5>
+        </div>
+
+        <div class="row">
+            <ul class="col s10 offset-s1 collapsible" data-collapsible="accordion" th:each="sharedToUserFile : ${sharedToUserFiles}">
+                <li>
+                    <div class="row collapsible-header">
+                        <div class="right">
+                            <a th:href="@{'/shared/{cloudFileName}'(cloudFileName=${sharedToUserFile.getFile().getCloudName()})}" class="btn-floating waves-effect waves-light green darken-3 tooltipped" data-position="top" th:attr="data-tooltip=#{shared.tooltip.download}">
+                                <i class="material-icons">cloud_download</i>
+                            </a>
+
+                            <a class="btn-floating waves-effect waves-light grey darken-3 tooltipped" th:onclick="'javascript:openCancelModal(\'' + ${sharedToUserFile.getFile().getCloudName()} + '\')'"
+                               data-position="top" th:attr="data-tooltip=#{shared.tooltip.cancel}">
+                                <i class="material-icons">clear</i>
+                            </a>
+                        </div>
+                        <div class="col m6 s12">
+                            <i class="material-icons circle">description</i>
+                            <span class="title" th:text="${sharedToUserFile.getFile().getName()}">File</span>
+                        </div>
+                    </div>
+                    <div class="row collapsible-body">
+                        <b><span class="indigo-text text-darken-2" th:text="#{shared.file.owner.prefix} + ' '"></span></b>
+                        <span th:text="${sharedToUserFile.getUserFrom().getEmail()}"></span><br/>
+
+                        <b><span class="indigo-text text-darken-2" th:text="#{shared.file.expiration.date.prefix} + ' '"></span></b>
+                        <span th:if="${#temporals.createNow().plusYears(2000).isAfter(sharedToUserFile.getExpirationDate())}"
+                              th:text="${#temporals.format(sharedToUserFile.getExpirationDate(), 'HH:mm dd-MM-yyyy')}"></span>
+                        <span th:if="${#temporals.createNow().plusYears(2000).isBefore(sharedToUserFile.getExpirationDate())}"
+                              th:text="#{shared.file.expiration.date.unlimited}"></span>
+                        <br/>
+
+                        <b><span class="indigo-text text-darken-2" th:text="#{shared.file.description.prefix} + ' '"></span></b>
+                        <span th:text="${sharedToUserFile.getFile().getDescription()} + ' '"></span><br/>
+
+                        <b><span class="indigo-text text-darken-2" th:text="#{shared.file.size.prefix} + ' '"></span></b>
+                        <span th:text="${#numbers.formatDecimal(sharedToUserFile.getFile().getSize() / 1048576.0, 1, 'COMMA', 3, 'POINT')} + ' '"></span>
+                        <span th:text="#{shared.file.size.suffix} + ' '"></span><br/>
+
+                        <b><span class="indigo-text text-darken-2"  th:text="#{shared.file.contentType.prefix} + ' '"></span></b>
+                        <span th:text="${sharedToUserFile.getFile().getContentType()} + ' '"></span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div th:replace="shared/modal/cancel :: cancelSharedModal"></div>
+        <div th:replace="layout/paginationBar :: paginationBar"></div>
+    </div>
+</div>
+
+<script type="text/javascript" layout:fragment="script">
+    $(document).ready(function(){
+        $(".nav-content ul li a").removeClass("active");
+        $("#sharedTab").addClass("active");
+
+        $('.row.collapsible-header a').on('click', function(e) {
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+        });
+    });
+</script>
+</body>
+</html>

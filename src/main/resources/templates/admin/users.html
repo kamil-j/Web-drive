@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default">
+<head>
+    <title th:text="#{admin.users.title}">WebDrive Users List</title>
+</head>
+<body>
+<div class="row" layout:fragment="content">
+    <div class="container">
+        <div class="row">
+            <h4 class="indigo-text center" th:text="#{admin.users.header}">Users list</h4>
+        </div>
+
+        <div class="row col m6 offset-m3 s10 offset-s1">
+            <form th:method="GET" th:action="@{/admin/users}">
+                <div class="input-field">
+                    <input id="email" type="search" name="email" th:placeholder="E-mail"/>
+                    <label class="label-icon" for="email"><i class="material-icons">search</i></label>
+                    <i class="material-icons">close</i>
+                </div>
+            </form>
+        </div>
+
+        <div class="row">
+            <ul class="col m6 offset-m3 s10 offset-s1 collection with-header" th:each="user : ${users}">
+                <li class="collection-item avatar">
+                    <i class="material-icons circle">person</i>
+                    <span class="title" th:text="${user.getEmail()}">Email</span><br/>
+                    <span th:text="${user.getName() + ' ' + user.getSurname()}">Name and surname</span>
+                    <a th:href="@{'/admin/user/{id}'(id=${user.getId()})}" class="secondary-content"><i class="material-icons">chevron_right</i></a>
+                </li>
+            </ul>
+        </div>
+
+        <div th:replace="layout/paginationBar :: paginationBar"></div>
+    </div>
+</div>
+</body>
+</html>

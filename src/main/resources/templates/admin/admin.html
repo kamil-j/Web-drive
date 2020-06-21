@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default">
+<head>
+    <title th:text="#{admin.page.title}">WebDrive Administration</title>
+</head>
+<body>
+<div class="row" layout:fragment="content">
+    <div class="container">
+        <div class="row">
+            <h4 class="indigo-text center" th:text="#{admin.page.header}">Administration Panel</h4>
+        </div>
+
+        <div class="row center">
+            <a th:href="@{/admin/users}" class="amber darken-3 waves-effect waves-light btn" th:utext="#{admin.manage.users.btn}">
+                <i class="material-icons left">account_box</i>Manage users
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

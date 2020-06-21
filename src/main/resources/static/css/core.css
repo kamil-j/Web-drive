@@ -1,0 +1,29 @@
+nav.nav-extended .nav-content ul li {
+    float: none;
+}
+
+.inline-form {
+    display: inline;
+}
+
+.modal-big {
+    height: 400px;
+}
+
+.icon-verySmall {
+    font-size: 3px
+}
+
+li .row.collapsible-header {
+    margin-bottom: 0;
+    min-height: 47px;
+}
+
+.row.collapsible-header a i.material-icons {
+    float: none;
+    margin: auto;
+}
+
+li .row.collapsible-body {
+    margin-bottom: 0;
+}
